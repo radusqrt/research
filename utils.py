@@ -109,4 +109,17 @@ def preprocess_text(reviews):
 
 
 def one_hot_eyewitness(df):
-    return df.join(pd.get_dummies(df['eyewitnessed'])).drop(['eyewitnessed'], axis=1)
+    return pd.concat([df, pd.get_dummies(df['eyewitnessed'])], axis=1).drop(['eyewitnessed'], axis=1)
+
+
+def read_data(file_name):
+    with open(file_name,'r') as f:
+        word_vocab = set() # not using list to avoid duplicate entry
+        word2vector = {}
+        for line in f:
+            line_ = line.strip() #Remove white space
+            words_Vec = line_.split()
+            word_vocab.add(words_Vec[0])
+            word2vector[words_Vec[0]] = np.array(words_Vec[1:],dtype=float)
+    print("Total Words in DataSet:",len(word_vocab))
+    return word_vocab,word2vector
